@@ -21,20 +21,17 @@ const GameStyle = styled.div`
 
 
 export const GameBoard: React.FunctionComponent = () => {
-    const { gameStatus, setGameStatus } = useGameContext()
+    const { gameStatus, correctLetters, almostLetters, incorrectLetters, setGameStatus, setCorrectLetters, setAlmostLetters, setIncorrectLetters } = useGameContext()
 
     const [currRow, setCurrRow] = useState<number>(0)
     const [currColumn, setCurrColumn] = useState<number | undefined>(0)
 
     const [boardState, setBoardState] = useState<TileState[][]>([])
 
-    const [correctLetters, setCorrectLetters] = useState<string[]>([])
-    const [almostLetters, setAlmostLetters] = useState<string[]>([])
-    const [incorrectLetters, setIncorrectLetters] = useState<string[]>([])
+    const { isLoading, isError, mutateAsync: makeGuess } = api.word.handleGuess.useMutation();
 
     const handleLetter = useCallback<(letter: string) => void>(
         (letter) => {
-            console.log(letter)
             if (gameStatus !== 'ONGOING') return
             if (currColumn === undefined) return
 
@@ -68,13 +65,12 @@ export const GameBoard: React.FunctionComponent = () => {
         setBoardState(boardState)
     }, [gameStatus, currRow, currColumn, boardState])
 
-    const handleEnter = useCallback<() => void>(() => {
+    const handleEnter = useCallback<() => void>(async () => {
         if (gameStatus !== 'ONGOING') return
         if (currColumn !== undefined) return
 
         const word = boardState[currRow]!.map((tile) => tile.letter)
-        const { data } = api.word.handleGuess.useQuery({ guess: word.join('') });
-        const result = data ?? [];
+        const result = await makeGuess({ guess: word.join('') });
 
         if (result.length !== WORD_LENGTH) return
 
@@ -84,7 +80,7 @@ export const GameBoard: React.FunctionComponent = () => {
             variant: result[i]!,
         }))
 
-        //push correct letters
+        // push correct letters
         boardState[currRow].forEach((_, i) => {
             if (result[i] === 'correct')
                 correctLetters.push(boardState[currRow]![i]!.letter)
@@ -135,6 +131,10 @@ export const GameBoard: React.FunctionComponent = () => {
     ])
 
     useEffect(() => {
+        console.log(isLoading)
+    }, [isLoading])
+
+    useEffect(() => {
         if (false) {
             // setBoardState(existingBoardState)
         } else {
@@ -159,9 +159,7 @@ export const GameBoard: React.FunctionComponent = () => {
     return <GameStyle>
         <TileGrid boardState={boardState} />
         <Keyboard
-            correctLetters={correctLetters}
-            almostLetters={almostLetters}
-            incorrectLetters={incorrectLetters}
+            isLoading={isLoading}
             handleLetter={handleLetter}
             handleDelete={handleDelete}
             handleEnter={handleEnter}
