@@ -14,3 +14,41 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.App {
+  --grey-background: #262626;
+  --grey-header: #383838;
+  --grey-keyboard: #959595;
+  --blank-main: #2A2A2A;
+  --blank-border: #404040;
+  --guessing-main: #404040;
+  --guessing-border: #636363;
+  --incorrect-main: #A92626;
+  --incorrect-border: #FF6161;
+  --almost-main: #D4783A;
+  --almost-border: #FFAF8C;
+  --correct-main: #46833A;
+  --correct-border: #83FFA8;
+}
+
+@font-face {
+  font-family: 'likeSnow';
+  src: url('../../public/fonts/LikeSnow.woff') format('woff2'),
+      url('../../public/fonts/LikeSnow.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'lilitaOne';
+  src: url('../../public/fonts/LilitaOne.woff2') format('woff2'),
+      url('../../public/fonts/LilitaOne.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'riffic';
+  src: url('../../public/fonts/Riffic-Bold.woff2') format('woff2'),
+      url('../../public/fonts/Riffic-Bold.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
