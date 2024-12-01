@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { KEYBOARD_HEIGHT_PIXELS } from '../../constants';
+import { useGameContext } from '~/context/GameContext';
 
 type KeyVariant = 'default' | 'correct' | 'almost' | 'incorrect'
 
@@ -14,18 +15,14 @@ const KeyVariantColourMap: {
 };
 
 interface KeyboardProps {
-    correctLetters: string[];
-    almostLetters: string[];
-    incorrectLetters: string[];
+    isLoading: boolean;
     handleLetter: (letter: string) => void;
     handleDelete: () => void;
     handleEnter: () => void;
 }
 
 export const Keyboard: React.FunctionComponent<KeyboardProps> = ({
-    correctLetters,
-    almostLetters,
-    incorrectLetters,
+    isLoading,
     handleLetter,
     handleDelete,
     handleEnter,
@@ -33,6 +30,8 @@ export const Keyboard: React.FunctionComponent<KeyboardProps> = ({
     const TOP_ROW_LETTERS = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P']
     const MIDDLE_ROW_LETTERS = ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L']
     const BOTTOM_ROW_LETTERS = ['Z', 'X', 'C', 'V', 'B', 'N', 'M']
+
+    const { correctLetters, almostLetters, incorrectLetters } = useGameContext();
 
     const getKeyVariant = (letter: string): KeyVariant => {
         if (correctLetters.includes(letter)) return 'correct'
@@ -48,13 +47,13 @@ export const Keyboard: React.FunctionComponent<KeyboardProps> = ({
                     <Key letter={letter} variant={getKeyVariant(letter)} handleKeyPress={handleLetter} key={letter} />
                 ))}
             </RowStyle>
-            <RowStyle>
                 <Spacer />
+            <RowStyle>
                 {MIDDLE_ROW_LETTERS.map((letter) => (
                     <Key letter={letter} variant={getKeyVariant(letter)} handleKeyPress={handleLetter} key={letter} />
                 ))}
-                <Spacer />
             </RowStyle>
+                <Spacer />
             <RowStyle>
                 <KeyStyle $colour={KeyVariantColourMap['default']} style={{ flex: '1.5', fontSize: '0.75rem' }} onClick={() => handleEnter()}>Enter</KeyStyle>
                 {BOTTOM_ROW_LETTERS.map((letter) => (
