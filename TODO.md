@@ -1,0 +1,5 @@
+- [ ] List of valid words
+- [ ] Validation of word against valid words
+- [ ] Word of the day stored remotely in database
+- [ ] Guess API to compare guess to word of the day
+- [ ] ...
